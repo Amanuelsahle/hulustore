@@ -1,15 +1,36 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface HeroProps {
     setPage?: (page: string, trackId?: string) => void
 }
 
+const CAROUSEL_IMAGES = [
+    '/image/carousel/photo_2026-08-04_23-38-34.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-36.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-37 (2).jpg',
+    '/image/carousel/photo_2026-08-04_23-38-37.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-38.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-39.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-40.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-41.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-42.jpg',
+    '/image/carousel/photo_2026-08-04_23-38-47.jpg',
+]
+
 export default function Hero({ setPage }: HeroProps) {
     const [searchId, setSearchId] = useState('')
+    const [carouselIndex, setCarouselIndex] = useState(0)
     const router = useRouter()
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCarouselIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
@@ -106,15 +127,22 @@ export default function Hero({ setPage }: HeroProps) {
                     </div>
                 </div>
 
-                {/* RIGHT — image with Ken Burns + overlays */}
+                {/* RIGHT — auto-advancing carousel + overlays */}
                 <div className="relative overflow-hidden" style={{ minHeight: '420px' }}>
-                    {/* Ken Burns image */}
-                    <img
-                        src="https://images.unsplash.com/photo-1756137984965-7eb2c6c6ee19?w=1200&h=1600&fit=crop&auto=format"
-                        alt="Woman in traditional Ethiopian dress on city street at night"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{ animation: 'hero-kenburns 18s ease-in-out infinite alternate' }}
-                    />
+                    {/* Carousel images — crossfade */}
+                    {CAROUSEL_IMAGES.map((src, idx) => (
+                        <img
+                            key={src}
+                            src={src}
+                            alt={`Hulu Store showcase image ${idx + 1}`}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            style={{
+                                opacity: idx === carouselIndex ? 1 : 0,
+                                transition: 'opacity 1s ease-in-out',
+                                animation: idx === carouselIndex ? 'hero-kenburns 18s ease-in-out infinite alternate' : 'none',
+                            }}
+                        />
+                    ))}
 
                     {/* Warm gradient overlay */}
                     <div
