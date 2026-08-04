@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import type { Order, Stage } from '@/types'
+import type { Order, Stage, AdminRole } from '@/types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tjbyiodwjictieysimwc.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -66,10 +66,21 @@ export function mapDbToOrder(dbRow: {
     customer: dbRow.customer_name,
     phone: dbRow.customer_phone,
     title: dbRow.order_title,
-    stage: (dbRow.stage >= 0 && dbRow.stage <= 4 ? dbRow.stage : 0) as Stage,
+    stage: (dbRow.stage >= 0 && dbRow.stage <= 6 ? dbRow.stage : 0) as Stage,
     createdAt: formattedDate,
     updatedAt: formattedUpdate,
     updatedAtRaw: rawUpdate,
     telegram_chat_id: dbRow.telegram_chat_id || undefined,
   }
+}
+
+export async function getAdminUserRole(userId: string): Promise<AdminRole | null> {
+  const { data, error } = await supabase
+    .from('admin_roles')
+    .select('role')
+    .eq('user_id', userId)
+    .single()
+
+  if (error || !data) return null
+  return data.role as AdminRole
 }

@@ -12,3 +12,12 @@ export interface Order {
   updatedAtRaw?: string
   telegram_chat_id?: string
 }
+
+export type AdminRole = 'SUPER_ADMIN' | 'ADMIN'
+
+export interface AdminUser {
+  user_id: string
+  email: string
+  role: AdminRole
+  created_at?: string
+}
