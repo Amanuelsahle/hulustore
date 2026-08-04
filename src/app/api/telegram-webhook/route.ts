@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import {
+  buildOrderNotFoundMessage,
+  buildSubscriptionConfirmedMessage,
+  buildWelcomeMessage,
+  buildUpdatesActiveMessage,
+  sendTelegramApiMessage,
+} from '@/lib/telegram-messages'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tjbyiodwjictieysimwc.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -44,10 +51,7 @@ export async function POST(request: Request) {
         .single()
 
       if (error || !order) {
-        replyText =
-          `⚠️ <b>Order Not Found</b>\n\n` +
-          `We couldn't find an order with Tracking ID <code>${trackingId}</code>.\n` +
-          `Please check your tracking ID and try again, or track on our website: https://hulu-store.vercel.app/track`
+        replyText = buildOrderNotFoundMessage(trackingId)
       } else {
         // Link Telegram Chat ID to the order via RPC function
         const { error: updateErr } = await supabase.rpc('link_telegram_chat', {
@@ -64,48 +68,15 @@ export async function POST(request: Request) {
             .eq('tracking_id', trackingId)
         }
 
-        if (updateErr) {
-          console.error('Error linking telegram_chat_id:', updateErr)
-        }
-
-        const stageNames = [
-          'Processing',
-          'Overseas Hub',
-          'Arrived in Addis Ababa',
-          'Out for Delivery 🚚',
-          'Delivered ✅',
-        ]
-        const currentStage = stageNames[order.stage] || 'Processing'
-
-        replyText =
-          `✅ <b>Telegram Subscription Confirmed!</b>\n\n` +
-          `Hello <b>${order.customer_name}</b>!\n` +
-          `Your Telegram account is now connected to order <code>${order.tracking_id}</code>.\n\n` +
-          `🛍️ <b>Items:</b> ${order.order_title}\n` +
-          `📍 <b>Current Status:</b> ${currentStage}\n\n` +
-          `🎉 We will send you an instant notification right here as soon as your order is <b>Out for Delivery</b>!`
+        replyText = buildSubscriptionConfirmedMessage(order)
       }
     } else {
-      replyText =
-        `👋 <b>Welcome to Hulu Store Delivery Bot!</b>\n\n` +
-        `To subscribe to live delivery updates for your order:\n` +
-        `1️⃣ Visit our tracking page on the website\n` +
-        `2️⃣ Click the <b>Get Telegram Updates</b> button for your order\n\n` +
-        `Or reply directly to this message with your Tracking ID (e.g. <code>HULU-8F2A9K</code>).`
+      replyText = buildWelcomeMessage()
     }
 
     // Send reply back to customer via Telegram API
     if (botToken && replyText) {
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: replyText,
-          parse_mode: 'HTML',
-          disable_web_page_preview: true,
-        }),
-      })
+      await sendTelegramApiMessage(botToken, chatId, replyText, { disableWebPagePreview: true })
     }
 
     return NextResponse.json({ ok: true })
@@ -178,15 +149,7 @@ export async function GET(request: Request) {
             if (!error) {
               linkedCount++
               // Only send confirmation for genuinely new subscriptions
-              await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  chat_id: chatId,
-                  text: `✅ <b>Telegram Updates Active!</b>\n\nYour Telegram account is now connected to order <code>${trackingId}</code>. You will receive real-time notifications here when your item is <b>Out for Delivery</b> 🚚!`,
-                  parse_mode: 'HTML',
-                }),
-              }).catch(() => {})
+              await sendTelegramApiMessage(botToken, chatId, buildUpdatesActiveMessage(trackingId)).catch(() => {})
             }
           }
         }

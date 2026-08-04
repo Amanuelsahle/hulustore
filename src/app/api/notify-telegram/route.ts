@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { buildStageUpdateMessage, sendTelegramApiMessage } from '@/lib/telegram-messages'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://tjbyiodwjictieysimwc.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -48,69 +49,16 @@ export async function POST(request: Request) {
       })
     }
 
-    const customerName = order?.customer_name || 'Customer'
-    const orderTitle = order?.order_title || 'Your Shein Package'
-    const customerPhone = order?.customer_phone || 'N/A'
-    const tId = trackingId || order?.tracking_id || 'HULU-STORE'
-    const stage = order?.stage ?? 0
+    const messageText = customMessage || buildStageUpdateMessage({
+      customerName: order?.customer_name,
+      orderTitle: order?.order_title,
+      customerPhone: order?.customer_phone,
+      trackingId: trackingId || order?.tracking_id,
+      stage: order?.stage,
+    })
 
-    const STAGE_DETAILS: Record<number, { title: string; subtext: string; icon: string }> = {
-      0: {
-        title: 'Order Processing',
-        subtext: 'Your order has been confirmed and is being prepared for overseas shipping.',
-        icon: '📦',
-      },
-      1: {
-        title: 'Overseas Branch Transit',
-        subtext: 'Your package is in transit from our overseas procurement hub.',
-        icon: '✈️',
-      },
-      2: {
-        title: 'Arrived in Addis Ababa',
-        subtext: 'Your package has cleared customs and is at our Addis Ababa warehouse.',
-        icon: '🏢',
-      },
-      3: {
-        title: 'Out For Delivery',
-        subtext: 'Great news! Our local courier is on the way with your package.',
-        icon: '🚚',
-      },
-      4: {
-        title: 'Order Delivered',
-        subtext: 'Your order has been successfully delivered. Thank you for shopping with Hulu Store!',
-        icon: '✅',
-      },
-    }
-
-    const currentStage = STAGE_DETAILS[stage] || STAGE_DETAILS[0]
-
-    // Format rich HTML message for Telegram based on current stage
-    const defaultText =
-      `${currentStage.icon} <b>Hulu Store - ${currentStage.title}!</b> ${currentStage.icon}\n\n` +
-      `Hello <b>${customerName}</b>!\n` +
-      `${currentStage.subtext}\n\n` +
-      `📦 <b>Tracking ID:</b> <code>${tId}</code>\n` +
-      `🛍️ <b>Items:</b> ${orderTitle}\n` +
-      `📞 <b>Contact:</b> ${customerPhone}\n\n` +
-      `🔗 Track updates live: <a href="https://hulu-store.vercel.app/track?id=${tId}">View Track Status</a>`
-
-    const messageText = customMessage || defaultText
-
-    // Send Telegram message via Telegram Bot API
-    const telegramRes = await fetch(
-      `https://api.telegram.org/bot${botToken}/sendMessage`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: messageText,
-          parse_mode: 'HTML',
-          disable_web_page_preview: false,
-        }),
-      }
-    )
-
+    // Send Telegram message via Telegram Bot API helper
+    const telegramRes = await sendTelegramApiMessage(botToken, chatId, messageText)
     const telegramData = await telegramRes.json()
 
     if (!telegramData.ok) {
