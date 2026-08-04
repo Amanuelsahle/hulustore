@@ -50,7 +50,9 @@ Execute the following SQL script inside your **Supabase SQL Editor** to set up t
 -- 1. Create Enums for Delivery Statuses
 CREATE TYPE delivery_status AS ENUM (
   'PROCESSING',
-  'FOREIGN_BRANCH',
+  'USA_BRANCH',
+  'READY_FOR_SHIPMENT',
+  'IN_TRANSIT',
   'ARRIVED_ADDIS',
   'OUT_FOR_DELIVERY',
   'DELIVERED'

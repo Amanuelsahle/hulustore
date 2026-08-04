@@ -1,4 +1,4 @@
-export type Stage = 0 | 1 | 2 | 3 | 4
+export type Stage = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export interface Order {
   id: string        // tracking_id (HULU-XXXXXX)

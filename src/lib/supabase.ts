@@ -8,10 +8,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export const STAGE_TO_STATUS: Record<Stage, string> = {
   0: 'PROCESSING',
-  1: 'FOREIGN_BRANCH',
-  2: 'ARRIVED_ADDIS',
-  3: 'OUT_FOR_DELIVERY',
-  4: 'DELIVERED',
+  1: 'USA_BRANCH',
+  2: 'READY_FOR_SHIPMENT',
+  3: 'IN_TRANSIT',
+  4: 'ARRIVED_ADDIS',
+  5: 'OUT_FOR_DELIVERY',
+  6: 'DELIVERED',
 }
 
 export function formatRelativeDate(dateString?: string): string {

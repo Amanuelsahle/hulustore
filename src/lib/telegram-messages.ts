@@ -37,18 +37,30 @@ export const STAGE_DETAILS: Record<number, StageDetail> = {
     label: 'Overseas Hub',
   },
   2: {
+    title: 'Ready for Shipment to Ethiopia',
+    subtext: 'Great news! 🎉 Your order is now ready for shipment to Ethiopia. It will be dispatched on the next available flight. We\'ll keep you updated every step of the way. ✈️',
+    icon: '✈️',
+    label: 'Ready for Shipment ✈️',
+  },
+  3: {
+    title: 'In Transit to Ethiopia',
+    subtext: 'Your order is now in transit 🚚✈️. It\'s on its way to Ethiopia. We\'ll notify you as soon as it arrives at our local branch.',
+    icon: '🛫',
+    label: 'In Transit to Ethiopia 🚚✈️',
+  },
+  4: {
     title: 'Arrived in Addis Ababa',
     subtext: 'Your order has arrived at the <b>HULU Ethiopia Branch</b> 🇪🇹 and is being processed for final delivery. You will receive another notification once it is out for delivery.',
     icon: '🏢',
     label: 'Arrived in Addis Ababa',
   },
-  3: {
+  5: {
     title: 'Out For Delivery',
     subtext: 'Your order is now out for delivery🚚. Our delivery team is on the way and your package will be with you soon. Please keep your phone nearby in case we need to contact you.',
     icon: '🚚',
     label: 'Out for Delivery 🚚',
   },
-  4: {
+  6: {
     title: 'Order Delivered',
     subtext: 'Your order has been successfully delivered. Thank you for choosing HULU Store! We hope you enjoy your purchase. If you have any questions or feedback, we are always here to help. 💙',
     icon: '✅',

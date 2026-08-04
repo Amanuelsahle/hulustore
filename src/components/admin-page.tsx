@@ -243,8 +243,8 @@ export default function AdminPage() {
       prev.map((o) => (o.id === order.id ? { ...o, stage: newStage } : o))
     )
 
-    // Automatically trigger Telegram Notification if updated to Stage 3 (OUT_FOR_DELIVERY)
-    if (newStage === 3) {
+    // Automatically trigger Telegram Notification if updated to Stage 5 (OUT_FOR_DELIVERY)
+    if (newStage === 5) {
       sendTelegramAlert(order)
     }
   }
@@ -364,7 +364,7 @@ export default function AdminPage() {
     return 0
   })
 
-  const stageCounts = [0, 1, 2, 3, 4].map((s) => orders.filter((o) => o.stage === s).length)
+  const stageCounts = STAGE_LABELS.map((_, s) => orders.filter((o) => o.stage === s).length)
 
   const SortIcon = ({ field }: { field: string }) => (
     <span style={{ color: sortField === field ? '#E8B8A2' : '#B8B3AE', fontSize: 11, marginLeft: 4 }}>
@@ -738,8 +738,8 @@ export default function AdminPage() {
                         onChange={(e) => handleStageChange(order, Number(e.target.value) as Stage)}
                         className="px-2.5 py-1.5 rounded-lg text-xs outline-none cursor-pointer font-semibold border-none"
                         style={{
-                          background: order.stage === 4 ? '#C3D9C7' : order.stage >= 2 ? '#F5DDD1' : '#EFECE6',
-                          color: order.stage === 4 ? '#2D5A36' : '#1E1B18',
+                          background: order.stage === STAGE_LABELS.length - 1 ? '#C3D9C7' : order.stage >= 2 ? '#F5DDD1' : '#EFECE6',
+                          color: order.stage === STAGE_LABELS.length - 1 ? '#2D5A36' : '#1E1B18',
                           width: '100%',
                           maxWidth: '175px',
                           opacity: updatingStage === order.id ? 0.5 : 1,
