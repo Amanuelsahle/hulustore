@@ -7,79 +7,9 @@ import type { Order } from '@/types'
 import { LOGO_SRC, STAGE_LABELS } from '@/lib/constants'
 import { supabase, mapDbToOrder } from '@/lib/supabase'
 import Footer from './footer'
-
-const STAGE_SUBTEXT = [
-  'Your order is confirmed and being prepared for international shipping.',
-  'Your order has been received at our HULU USA Branch.',
-  'Great news! Your order is ready for shipment to Ethiopia.',
-  'Your order is in transit on its way to Ethiopia.',
-  'Package has cleared customs and is at our Addis Ababa warehouse.',
-  'Our local courier is on the way to your delivery address.',
-  'Your order has been successfully delivered. Thank you for shopping with us!',
-]
-
-function StageIcon({ index, size = 24 }: { index: number; size?: number }) {
-  const s = size
-  const sw = '1.8'
-  switch (index) {
-    case 0: // Processing
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-      )
-    case 1: // USA Branch
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-      )
-    case 2: // Ready for Shipment
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-        </svg>
-      )
-    case 3: // In Transit
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 21 4s-2 0-3.5 1.5L14 9 5.8 7.2" />
-          <path d="m9 3-2 2.5-3 .5 2 2 .5 3 2.5-2 3 2-.5-3 2-2.5-3-.5z" />
-          <path d="M4.5 16.5 3 18" /><path d="m5 21 4-4" /><path d="m9 16.5-1.5 1.5" />
-        </svg>
-      )
-    case 4: // Addis Ababa
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <rect x="4" y="2" width="16" height="20" rx="2" />
-          <path d="M9 22v-4h6v4" />
-          <path d="M8 6h.01" /><path d="M16 6h.01" />
-          <path d="M8 10h.01" /><path d="M16 10h.01" />
-          <path d="M8 14h.01" /><path d="M16 14h.01" />
-        </svg>
-      )
-    case 5: // Out for delivery
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <rect x="1" y="3" width="15" height="13" rx="1" />
-          <path d="M16 8h4l3 5v3h-7V8z" />
-          <circle cx="5.5" cy="18.5" r="2.5" />
-          <circle cx="18.5" cy="18.5" r="2.5" />
-        </svg>
-      )
-    case 6: // Delivered
-      return (
-        <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-      )
-    default:
-      return null
-  }
-}
+import TrackSearchForm from './track/TrackSearchForm'
+import TrackTimeline from './track/TrackTimeline'
+import TelegramSubscribeCard from './track/TelegramSubscribeCard'
 
 function maskName(name: string): string {
   const parts = name.split(' ')
@@ -147,16 +77,6 @@ export default function TrackPage() {
     doSearch(query)
   }
 
-  const stageColor = (idx: number, current: number) => {
-    if (idx < current) return '#E8B8A2'
-    if (idx === current) return '#E8B8A2'
-    return '#EFECE6'
-  }
-  const stageFg = (idx: number, current: number) => {
-    if (idx <= current) return '#1E1B18'
-    return '#B8B3AE'
-  }
-
   return (
     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#FAFAFA' }}>
       <div>
@@ -168,7 +88,6 @@ export default function TrackPage() {
             <img src={LOGO_SRC} alt="Hulu Store logo" className="w-11 h-11 object-contain rounded-full" />
             <span className="font-bold text-lg tracking-tight" style={{ color: '#1E1B18' }}>Hulu Store</span>
           </Link>
-
         </nav>
 
         <div className="max-w-2xl mx-auto px-6 py-16">
@@ -178,27 +97,12 @@ export default function TrackPage() {
             <p className="text-sm" style={{ color: '#7A746E' }}>Enter your Hulu Store tracking ID to see your package status.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex gap-3 mb-10">
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="e.g. HULU-8F2b9c"
-              className="flex-1 px-4 py-3.5 rounded-xl text-base md:text-sm outline-none"
-              style={{
-                background: '#FFFFFF',
-                border: '1.5px solid #EFECE6',
-                fontFamily: 'var(--font-mono)',
-                color: '#1E1B18',
-                letterSpacing: '0.04em',
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = '#EFECE6')}
-            />
-            <button type="submit" className="cta-btn px-6 py-3.5 rounded-xl text-sm font-semibold whitespace-nowrap">
-              Track
-            </button>
-          </form>
+          <TrackSearchForm
+            inputRef={inputRef}
+            query={query}
+            setQuery={setQuery}
+            handleSubmit={handleSubmit}
+          />
 
           {loading && (
             <div className="rounded-2xl overflow-hidden" style={{ background: '#FFFFFF', border: '1.5px solid #EFECE6' }}>
@@ -277,137 +181,9 @@ export default function TrackPage() {
                 </div>
               </div>
 
-              <div className="px-6 py-8">
-                <div className="relative">
-                  <div
-                    className="absolute left-5 top-5 bottom-5 w-px"
-                    style={{ background: '#EFECE6' }}
-                  />
-                  {found.stage > 0 && (
-                    <div
-                      className="absolute left-5 top-5 w-px"
-                      style={{
-                        background: '#E8B8A2',
-                        height: `${(found.stage / (STAGE_LABELS.length - 1)) * 100}%`,
-                        transition: 'height 0.8s ease-out',
-                      }}
-                    />
-                  )}
+              <TrackTimeline found={found} animated={animated} />
 
-                  <div className="space-y-8">
-                    {STAGE_LABELS.map((label, i) => {
-                      const isCompleted = i < found.stage
-                      const isActive = i === found.stage
-                      const delay = i * 0.1
-
-                      return (
-                        <div
-                          key={i}
-                          className={`step-node flex items-start gap-5 ${animated ? 'animate' : ''}`}
-                          style={{ animationDelay: `${delay}s` }}
-                        >
-                          <div className="relative flex-shrink-0">
-                            {isActive && <span className="pulse-ring" />}
-
-                            <div
-                              className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300"
-                              style={{
-                                background: isCompleted || isActive ? '#E8B8A2' : '#FFFFFF',
-                                border: `2px solid ${stageColor(i, found.stage)}`,
-                                color: stageFg(i, found.stage),
-                              }}
-                            >
-                              {isCompleted ? (
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                  <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                              ) : (
-                                <span style={{ color: isActive ? '#1E1B18' : '#B8B3AE' }}>
-                                  <StageIcon index={i} size={17} />
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="pt-1.5 flex-1">
-                            <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                              <p
-                                className="font-semibold text-sm"
-                                style={{ color: isActive || isCompleted ? '#1E1B18' : '#B8B3AE' }}
-                              >
-                                {label}
-                              </p>
-                              {isActive && found.updatedAt && (
-                                <span
-                                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-full"
-                                  style={{ background: '#F5DDD1', color: '#8A4B2A' }}
-                                >
-                                  Updated: {found.updatedAt}
-                                </span>
-                              )}
-                            </div>
-                            {(isActive || isCompleted) && (
-                              <p className="text-xs leading-relaxed" style={{ color: '#7A746E' }}>
-                                {STAGE_SUBTEXT[i]}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Telegram Notification Subscription Banner */}
-              <div
-                className="mx-6 mb-6 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
-                style={{
-                  background: found.telegram_chat_id ? '#F0F7F4' : '#F4F8FA',
-                  border: `1.5px solid ${found.telegram_chat_id ? '#C3D9C7' : '#D2E3FC'}`,
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{
-                      background: found.telegram_chat_id ? '#2D5A36' : '#2481CC',
-                      color: '#FFFFFF',
-                    }}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21.5 2L2 11.5l6 2.5 11-8-8.5 9.5v5l3.5-3.5 5.5 4z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold" style={{ color: '#1E1B18' }}>
-                      {found.telegram_chat_id ? 'Telegram Updates Active' : 'Get Live Delivery Updates via Telegram'}
-                    </h4>
-                    <p className="text-xs leading-relaxed mt-0.5" style={{ color: '#5F6368' }}>
-                      {found.telegram_chat_id
-                        ? `Your order ${found.id} is connected to Telegram. You'll receive instant alerts when out for delivery!`
-                        : `Click below to start our Telegram bot and receive instant notification when your package is Out for Delivery.`}
-                    </p>
-                  </div>
-                </div>
-
-                <a
-                  href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'hulustore_bot'}?start=${found.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 shadow-sm hover:opacity-90"
-                  style={{
-                    background: found.telegram_chat_id ? '#FFFFFF' : '#2481CC',
-                    color: found.telegram_chat_id ? '#2D5A36' : '#FFFFFF',
-                    border: found.telegram_chat_id ? '1px solid #C3D9C7' : 'none',
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.96 1.25-5.54 3.69-.52.36-1 .54-1.43.53-.47-.01-1.37-.27-2.04-.49-.82-.27-1.47-.42-1.42-.88.03-.24.38-.49 1.04-.75 4.09-1.78 6.82-2.95 8.19-3.52 3.9-1.63 4.71-1.91 5.24-1.92.12 0 .37.03.54.17.14.12.18.29.2.46-.01.07-.01.16-.02.26z" />
-                  </svg>
-                  {found.telegram_chat_id ? 'Reconnect Bot' : 'Subscribe on Telegram'}
-                </a>
-              </div>
+              <TelegramSubscribeCard found={found} />
 
               <div
                 className="px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs"
