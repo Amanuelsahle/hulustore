@@ -168,15 +168,7 @@ export default function TrackPage() {
             <img src={LOGO_SRC} alt="Hulu Store logo" className="w-11 h-11 object-contain rounded-full" />
             <span className="font-bold text-lg tracking-tight" style={{ color: '#1E1B18' }}>Hulu Store</span>
           </Link>
-          <Link
-            href="/admin"
-            className="text-sm font-medium px-4 py-2.5 rounded-xl transition-colors"
-            style={{ color: '#7A746E', border: '1px solid #EFECE6' }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#EFECE6')}
-          >
-            Admin
-          </Link>
+
         </nav>
 
         <div className="max-w-2xl mx-auto px-6 py-16">
@@ -198,7 +190,6 @@ export default function TrackPage() {
                 border: '1.5px solid #EFECE6',
                 fontFamily: 'var(--font-mono)',
                 color: '#1E1B18',
-                fontSize: '13.5px',
                 letterSpacing: '0.04em',
               }}
               onFocus={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}

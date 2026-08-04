@@ -100,7 +100,6 @@ export default function Hero({ setPage }: HeroProps) {
                                     border: '1.5px solid #EFECE6',
                                     fontFamily: 'var(--font-mono)',
                                     color: '#1E1B18',
-                                    fontSize: '13px',
                                     boxShadow: '0 2px 8px rgba(30,27,24,0.06)',
                                 }}
                                 onFocus={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
