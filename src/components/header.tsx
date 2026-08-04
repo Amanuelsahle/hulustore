@@ -40,21 +40,7 @@ export default function Header({ setPage }: HeaderProps) {
                 >
                     Track Order
                 </Link>
-                <Link
-                    href="/admin"
-                    onClick={(e) => {
-                        if (setPage) {
-                            e.preventDefault()
-                            setPage('admin')
-                        }
-                    }}
-                    className="text-sm font-medium px-4 py-2.5 rounded-xl transition-colors inline-block"
-                    style={{ color: '#7A746E', border: '1px solid #EFECE6' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
-                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#EFECE6')}
-                >
-                    Admin
-                </Link>
+
             </div>
         </nav>
     )

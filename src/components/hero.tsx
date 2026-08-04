@@ -94,7 +94,7 @@ export default function Hero({ setPage }: HeroProps) {
                                 value={searchId}
                                 onChange={(e) => setSearchId(e.target.value)}
                                 placeholder="e.g. HULU-8F2b9c"
-                                className="flex-1 px-4 py-3.5 rounded-xl text-sm outline-none"
+                                className="flex-1 px-4 py-3.5 rounded-xl text-base md:text-sm outline-none"
                                 style={{
                                     background: '#FFFFFF',
                                     border: '1.5px solid #EFECE6',

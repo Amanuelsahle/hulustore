@@ -245,7 +245,7 @@ export default function AdminPage() {
   async function fetchOrders() {
     setOrdersLoading(true)
     // Auto-sync any pending Telegram start commands
-    await fetch('/api/telegram-webhook?sync=true').catch(() => {})
+    await fetch('/api/telegram-webhook?sync=true').catch(() => { })
 
     const { data, error } = await supabase
       .from('orders')
@@ -450,7 +450,7 @@ export default function AdminPage() {
                 onChange={(e) => setEmailInput(e.target.value)}
                 placeholder="admin@example.com"
                 required
-                className="w-full px-4 py-3.5 rounded-xl text-sm outline-none transition-colors"
+                className="w-full px-4 py-3.5 rounded-xl text-base md:text-sm outline-none transition-colors"
                 style={{
                   background: '#FAFAFA',
                   border: `1.5px solid ${authError ? '#E87A7A' : '#EFECE6'}`,
@@ -468,7 +468,7 @@ export default function AdminPage() {
                 onChange={(e) => setPassInput(e.target.value)}
                 placeholder="Password"
                 required
-                className="w-full px-4 py-3.5 rounded-xl text-sm outline-none transition-colors"
+                className="w-full px-4 py-3.5 rounded-xl text-base md:text-sm outline-none transition-colors"
                 style={{
                   background: '#FAFAFA',
                   border: `1.5px solid ${authError ? '#E87A7A' : '#EFECE6'}`,
@@ -534,9 +534,8 @@ export default function AdminPage() {
           <div className="hidden md:flex items-center p-1 rounded-xl gap-1" style={{ background: '#EFECE6' }}>
             <button
               onClick={() => setActiveTab('orders')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'orders' ? 'shadow-sm' : 'opacity-70 hover:opacity-100'
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${activeTab === 'orders' ? 'shadow-sm' : 'opacity-70 hover:opacity-100'
+                }`}
               style={{
                 background: activeTab === 'orders' ? '#FFFFFF' : 'transparent',
                 color: activeTab === 'orders' ? '#1E1B18' : '#7A746E',
@@ -546,9 +545,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab('users')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === 'users' ? 'shadow-sm' : 'opacity-70 hover:opacity-100'
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${activeTab === 'users' ? 'shadow-sm' : 'opacity-70 hover:opacity-100'
+                }`}
               style={{
                 background: activeTab === 'users' ? '#FFFFFF' : 'transparent',
                 color: activeTab === 'users' ? '#1E1B18' : '#7A746E',
@@ -685,7 +683,7 @@ export default function AdminPage() {
                       onChange={(e) => field.set(e.target.value)}
                       placeholder={field.placeholder}
                       required
-                      className="w-full px-3.5 py-3 rounded-xl text-sm outline-none transition-colors"
+                      className="w-full px-3.5 py-3 rounded-xl text-base md:text-sm outline-none transition-colors"
                       style={{
                         background: '#FAFAFA',
                         border: '1.5px solid #EFECE6',
@@ -1217,7 +1215,7 @@ export default function AdminPage() {
                       onChange={(e) => setNewAdminEmail(e.target.value)}
                       placeholder="newadmin@hulustore.com"
                       required
-                      className="w-full px-3.5 py-3 rounded-xl text-sm outline-none transition-colors"
+                      className="w-full px-3.5 py-3 rounded-xl text-base md:text-sm outline-none transition-colors"
                       style={{ background: '#FAFAFA', border: '1.5px solid #EFECE6', color: '#1E1B18' }}
                       onFocus={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
                       onBlur={(e) => (e.currentTarget.style.borderColor = '#EFECE6')}
@@ -1233,7 +1231,7 @@ export default function AdminPage() {
                       placeholder="At least 6 characters"
                       required
                       minLength={6}
-                      className="w-full px-3.5 py-3 rounded-xl text-sm outline-none transition-colors"
+                      className="w-full px-3.5 py-3 rounded-xl text-base md:text-sm outline-none transition-colors"
                       style={{ background: '#FAFAFA', border: '1.5px solid #EFECE6', color: '#1E1B18' }}
                       onFocus={(e) => (e.currentTarget.style.borderColor = '#E8B8A2')}
                       onBlur={(e) => (e.currentTarget.style.borderColor = '#EFECE6')}
